@@ -6,9 +6,11 @@ import Link from "next/link"
 import { Button } from "../ui/button"
 import {
     Moon as DarkThemeIcon,
-    Sun as LightThemeIcon
+    Sun as LightThemeIcon,
+    MenuIcon,
+    X as CloseIcon
 } from 'lucide-react'
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import { ThemeContext } from "../context/ThemeContext"
 import { useRouter } from "next/navigation"
 
@@ -16,7 +18,8 @@ const Header = () => {
 
     const context = useContext(ThemeContext)
     const navigate = useRouter()
- 
+    const [showSidebar, setShowSidebar] = useState<boolean>(false)
+
     return (
 
         <header
@@ -44,27 +47,62 @@ const Header = () => {
                     >
                         {
                             context?.theme === "light"
-                            ?
-                            <DarkThemeIcon
-                                size={21}
-                                strokeWidth={1.5}
-                                className="stroke-foreground"
-                            />
-                            :
-                            <LightThemeIcon
-                                size={21}
-                                strokeWidth={1.5}
-                                className="stroke-foreground"
-                            />
+                                ?
+                                <DarkThemeIcon
+                                    size={21}
+                                    strokeWidth={1.5}
+                                    className="stroke-foreground"
+                                />
+                                :
+                                <LightThemeIcon
+                                    size={21}
+                                    strokeWidth={1.5}
+                                    className="stroke-foreground"
+                                />
                         }
                     </div>
-                    <Button
-                        className="text-xs cursor-pointer hover:bg-primary-hover"
-                        size="sm"
-                        onClick={() => navigate.push("/notes")}
-                    >
-                        Get Started
-                    </Button>
+                    {
+                        showSidebar
+                            ?
+                            <CloseIcon
+                                size={21}
+                                className="sm:hidden stroke-foreground z-20"
+                                onClick={() => setShowSidebar(false)}
+                            />
+                            :
+                            <MenuIcon
+                                size={21}
+                                className="sm:hidden stroke-foreground z-20"
+                                onClick={() => setShowSidebar(true)}
+                            />
+                    }
+                    <div className="flex gap-2">
+                        <Button
+                            className="text-xs hidden sm:block cursor-pointer hover:bg-primary-hover"
+                            size="sm"
+                            onClick={() => navigate.push("/notes")}
+                        >
+                            Get Started
+                        </Button>
+                        <Button
+                            className="text-xs hidden sm:block cursor-pointer hover:bg-primary-hover"
+                            size="sm"
+                        >
+                            Sign In
+                        </Button>
+                    </div>
+                    <aside className={`text-primary flex ${showSidebar ? "right-0" : "-right-[100vw]"} gap-1 transition-all h-screen duration-300 flex-col w-screen absolute top-0 px-5 items-end py-15 z-10 bg-background`}>
+                        <Link
+                            className="border-b-2 w-full flex justify-end text-md p-2"
+                            href={"/notes"}
+                        >Get Started
+                        </Link>
+                        <Link
+                            className="border-b-2 pb-2 w-full flex justify-end text-md p-2"
+                            href={"/"}
+                        >Sign In
+                        </Link>
+                    </aside>
                 </div>
             </nav>
         </header>

@@ -1,11 +1,11 @@
-import React from 'react'
+import { SignIn } from "@clerk/nextjs"
 
 const page = () => {
 
     return (
 
-        <section className='pt-15'>
-            Hello world
+        <section className="py-15 w-full flex justify-center items-center">
+            <SignIn />
         </section>
 
     )

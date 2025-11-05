@@ -12,9 +12,9 @@ const FeatureCard = ({children , title , content} : FeatureCardType) => {
     return (
 
 
-        <Card className="rounded-md w-80 px-4 hover:-translate-y-2 transition-all duration-200 hover:shadow-md hover:shadow-primary">
+        <Card className="rounded-md gap-0 w-80 px-4 hover:-translate-y-2 transition-all duration-200 hover:shadow-md hover:shadow-primary">
             {children}
-            <CardHeader className="p-0 text-md font-light">
+            <CardHeader className="p-0 mt-3 text-md font-light">
                {title}
             </CardHeader>
             <CardContent className="p-0 m-0 text-sm text-disable-color">
