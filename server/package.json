@@ -2,7 +2,7 @@
   "name": "server",
   "type": "module",
   "engines": {
-    "node": ">=22.16.0"
+    "node": ">=18.18.0"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
