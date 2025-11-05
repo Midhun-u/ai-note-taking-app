@@ -22,6 +22,7 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-disable-color: var(--disable-color);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -31,6 +32,8 @@
   --color-secondary: var(--secondary);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
+  --color-primary-accent: var(--primary-accent);
+  --color-primary-hover : var(--primary-hover);
   --color-popover-foreground: var(--popover-foreground);
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
@@ -51,6 +54,9 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: #2ABCDA;
   --primary-foreground: #ffffff;
+  --primary-hover: rgb(42, 129, 164);
+  --primary-accent: #edf4f6;
+  --disable-color: #888888;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
@@ -85,6 +91,7 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: #2ABCDA;
   --primary-foreground: oklch(0.205 0 0);
+  --primary-accent: #262829;
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
@@ -114,6 +121,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

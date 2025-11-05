@@ -20,7 +20,7 @@ const Header = () => {
     return (
 
         <header
-            className="w-full flex justify-center h-auto px-5 py-2 border-b-2 fixed"
+            className="w-full flex justify-center h-auto px-5 py-2 border-b-2 fixed backdrop-blur-xs"
         >
             <nav
                 className="w-full h-auto flex justify-between gap-5"
@@ -59,7 +59,7 @@ const Header = () => {
                         }
                     </div>
                     <Button
-                        className="text-xs cursor-pointer hover:bg-primary-accent"
+                        className="text-xs cursor-pointer hover:bg-primary-hover"
                         size="sm"
                         onClick={() => navigate.push("/notes")}
                     >
