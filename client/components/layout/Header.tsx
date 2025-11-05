@@ -13,19 +13,20 @@ import {
 import { useContext, useState } from "react"
 import { ThemeContext } from "../context/ThemeContext"
 import { useRouter } from "next/navigation"
-import { AuthContext } from "../context/AuthContext"
+import { SignedOut } from "@clerk/nextjs"
+import { SignedIn, SignInButton, UserButton } from "@clerk/clerk-react"
+import { dark } from "@clerk/themes"
 
 const Header = () => {
 
     const themeContext = useContext(ThemeContext)
-    const authContext = useContext(AuthContext)
     const navigate = useRouter()
     const [showSidebar, setShowSidebar] = useState<boolean>(false)
 
     return (
 
         <header
-            className="w-full flex justify-center h-auto px-5 py-2 border-b-2 fixed backdrop-blur-xs"
+            className="w-full flex justify-center h-auto px-2 md:px-5 py-2 border-b-2 fixed backdrop-blur-xs"
         >
             <nav
                 className="w-full h-auto flex justify-between gap-5"
@@ -63,6 +64,13 @@ const Header = () => {
                                 />
                         }
                     </div>
+                    <SignedIn>
+                        <UserButton
+                            appearance={{
+                                theme: themeContext?.theme === "dark" ? dark : undefined
+                            }}
+                        />
+                    </SignedIn>
                     {
                         showSidebar
                             ?
@@ -86,30 +94,41 @@ const Header = () => {
                         >
                             Get Started
                         </Button>
-                        <Button
-                            className="text-xs hidden sm:block cursor-pointer hover:bg-primary-hover"
-                            size="sm"
-                            onClick={() => authContext?.handleChangeAuthScreen()}
-                        >
-                            Sign In
-                        </Button>
+                        <SignedOut>
+                            <SignInButton>
+                                <Button
+                                    className="text-xs hidden sm:block cursor-pointer hover:bg-primary-hover"
+                                    size="sm"
+                                >
+                                    Sign In
+                                </Button>
+                            </SignInButton>
+                        </SignedOut>
                     </div>
                     <aside className={`text-primary flex ${showSidebar ? "right-0" : "-right-[100vw]"} gap-1 transition-all h-screen duration-300 flex-col w-screen absolute top-0 px-5 items-end py-15 z-10 bg-background`}>
                         <Link
                             href={"/notes"}
                             className="border-b-2 w-full flex justify-end text-md p-2"
-                            onClick={() => navigate.push("/notes")}
+                            onClick={() => {
+                                navigate.push("/notes")
+                                setShowSidebar(false)
+                            }}
                         >
                             Get Started
                         </Link>
-                        <Button
-                            onClick={() => {
-                                setShowSidebar(false)
-                                authContext?.handleChangeAuthScreen()
-                            }}
-                            className="border-b-2 bg-background hover:bg-background text-primary rounded-xs cursor-pointer pb-2 w-full flex justify-end text-md p-2"
-                        >Sign In
-                        </Button>
+                        <SignedOut>
+                            <SignInButton>
+                                <div
+                                    onClick={() => {
+                                        setShowSidebar(false)
+                                        setShowSidebar(false)
+                                    }}
+                                    className="border-b-2 bg-background text-primary cursor-pointer pb-2 w-full flex justify-end p-2"
+                                >
+                                    Sign In
+                                </div>
+                            </SignInButton>
+                        </SignedOut>
                     </aside>
                 </div>
             </nav>

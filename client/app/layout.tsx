@@ -4,7 +4,6 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/context/ThemeContext";
 import { ClerkProvider } from "@clerk/nextjs";
-import { AuthProvider } from "@/components/context/AuthContext";
 import React from "react";
 
 const poppins = Poppins({
@@ -20,10 +19,6 @@ export const metadata: Metadata = {
   }
 };
 
-const DynamicAuthForm = React.lazy(() => {
-  return import("../components/layout/AuthForm")
-})
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,10 +32,7 @@ export default function RootLayout({
         >
           <main>
             <ThemeProvider>
-              <AuthProvider>
-                <Header />
-                <DynamicAuthForm />
-              </AuthProvider>
+              <Header />
             </ThemeProvider>
             {children}
           </main>
