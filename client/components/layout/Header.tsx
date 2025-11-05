@@ -13,10 +13,12 @@ import {
 import { useContext, useState } from "react"
 import { ThemeContext } from "../context/ThemeContext"
 import { useRouter } from "next/navigation"
+import { AuthContext } from "../context/AuthContext"
 
 const Header = () => {
 
-    const context = useContext(ThemeContext)
+    const themeContext = useContext(ThemeContext)
+    const authContext = useContext(AuthContext)
     const navigate = useRouter()
     const [showSidebar, setShowSidebar] = useState<boolean>(false)
 
@@ -43,10 +45,10 @@ const Header = () => {
                 <div className="flex items-center gap-3">
                     <div
                         className="cursor-pointer p-2 rounded-full hover:bg-popover"
-                        onClick={() => context?.toggleTheme()}
+                        onClick={() => themeContext?.toggleTheme()}
                     >
                         {
-                            context?.theme === "light"
+                            themeContext?.theme === "light"
                                 ?
                                 <DarkThemeIcon
                                     size={21}
@@ -87,21 +89,27 @@ const Header = () => {
                         <Button
                             className="text-xs hidden sm:block cursor-pointer hover:bg-primary-hover"
                             size="sm"
+                            onClick={() => authContext?.handleChangeAuthScreen()}
                         >
                             Sign In
                         </Button>
                     </div>
                     <aside className={`text-primary flex ${showSidebar ? "right-0" : "-right-[100vw]"} gap-1 transition-all h-screen duration-300 flex-col w-screen absolute top-0 px-5 items-end py-15 z-10 bg-background`}>
                         <Link
-                            className="border-b-2 w-full flex justify-end text-md p-2"
                             href={"/notes"}
-                        >Get Started
+                            className="border-b-2 w-full flex justify-end text-md p-2"
+                            onClick={() => navigate.push("/notes")}
+                        >
+                            Get Started
                         </Link>
-                        <Link
-                            className="border-b-2 pb-2 w-full flex justify-end text-md p-2"
-                            href={"/"}
+                        <Button
+                            onClick={() => {
+                                setShowSidebar(false)
+                                authContext?.handleChangeAuthScreen()
+                            }}
+                            className="border-b-2 bg-background hover:bg-background text-primary rounded-xs cursor-pointer pb-2 w-full flex justify-end text-md p-2"
                         >Sign In
-                        </Link>
+                        </Button>
                     </aside>
                 </div>
             </nav>
