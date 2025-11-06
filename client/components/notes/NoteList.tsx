@@ -94,16 +94,13 @@ const NoteList = () => {
 
                     ))
                     :
-                    <h1 className='text-lg md:text-xl mt-4'>No Notes Yet</h1>
-            }
-            {
-                loading
-                    ?
-                    <div className='mt-5 w-full flex justify-center'>
+                    (
+                        !loading
+                        ?
+                        <h1 className='text-lg md:text-xl mt-4'>No Notes Yet</h1>
+                        :
                         <Spinner />
-                    </div>
-                    :
-                    null
+                    )
             }
             <div className='w-full flex justify-center'>
                 {

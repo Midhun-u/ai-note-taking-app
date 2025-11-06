@@ -9,7 +9,8 @@ export const noteRouter = new Hono()
 //Applying clerk middleware
 noteRouter.use("*" , clerkMiddleware({
     secretKey : process.env.CLERK_SECRET_KEY , 
-    publishableKey : process.env.CLERK_PUBLISHABLE_KEY
+    publishableKey : process.env.CLERK_PUBLISHABLE_KEY,
+    authorizedParties : [process.env.CLIENT_URL as string]
 }))
 noteRouter.use(authMiddleware)
 
