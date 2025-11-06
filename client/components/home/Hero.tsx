@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 
 const Hero = () => {
 
-    const navigate = useRouter()
+    const router = useRouter()
 
     return (
 
@@ -27,7 +27,7 @@ const Hero = () => {
             <p className='text-center text-sm text-disable-color  w-auto md:w-[500px] px-3 md:px-0'>
                 Write, organize, and enhance your notes with the power of artificial intelligence. Get summaries, improve your writing, and auto-generate tags instantly.
             </p>
-            <Button onClick={() => navigate.push("/notes")} className='cursor-pointer text-xs md:text-md hover:bg-primary-hover'>
+            <Button onClick={() => router.push("/notes")} className='cursor-pointer text-xs md:text-md hover:bg-primary-hover'>
                 Start Taking Notes
             </Button>
         </div>

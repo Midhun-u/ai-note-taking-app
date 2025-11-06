@@ -1,5 +1,6 @@
 {
   "name": "server",
+  "main": "./src/server.ts",
   "type": "module",
   "engines": {
     "node": ">=18.18.0"
@@ -8,10 +9,11 @@
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-    "production" : "tsc && node dist/server.js"
+    "production": "tsc && node dist/server.js"
   },
   "dependencies": {
     "@hono/node-server": "^1.19.6",
+    "dotenv": "^17.2.3",
     "hono": "^4.10.4"
   },
   "devDependencies": {

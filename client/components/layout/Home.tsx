@@ -1,5 +1,5 @@
-import Features from "../Home/Features"
-import Hero from "../Home/Hero"
+import Features from "../home/Features"
+import Hero from "../home/Hero"
 
 
 const Home = () => {

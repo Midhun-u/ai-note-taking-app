@@ -20,7 +20,7 @@ import { dark } from "@clerk/themes"
 const Header = () => {
 
     const themeContext = useContext(ThemeContext)
-    const navigate = useRouter()
+    const router = useRouter()
     const [showSidebar, setShowSidebar] = useState<boolean>(false)
 
     return (
@@ -90,7 +90,7 @@ const Header = () => {
                         <Button
                             className="text-xs hidden sm:block cursor-pointer hover:bg-primary-hover"
                             size="sm"
-                            onClick={() => navigate.push("/notes")}
+                            onClick={() => router.push("/notes")}
                         >
                             Get Started
                         </Button>
@@ -110,7 +110,7 @@ const Header = () => {
                             href={"/notes"}
                             className="border-b-2 w-full flex justify-end text-md p-2"
                             onClick={() => {
-                                navigate.push("/notes")
+                                router.push("/notes")
                                 setShowSidebar(false)
                             }}
                         >
