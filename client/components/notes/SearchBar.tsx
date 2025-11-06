@@ -17,12 +17,12 @@ const SearchBar = () => {
         <div className="mt-5 w-full flex flex-col md:flex-row gap-3">
             <div className='w-full md:w-[70vw] flex items-center'>
                 <SearchIcon
-                    className="absolute left-5 md:left-7 stroke-disable-color"
+                    className="absolute left-5 md:left-7 stroke-disable-color -z-1"
                     size={18}
                 />
                 <Input
                     placeholder="Search notes"
-                    className="relative text-xs pl-10 focus-visible:ring-1 focus-visible:ring-primary rounded-xs"
+                    className="relative text-xs pl-10 focus-visible:ring-1 focus-visible:ring-primary rounded-xs -z-1"
                 />
             </div>
             <Button

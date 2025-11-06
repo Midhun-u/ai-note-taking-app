@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import { ThemeProvider } from "@/components/context/ThemeContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import React from "react";
+import { ToastContainer } from 'react-toastify'
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -35,6 +36,14 @@ export default function RootLayout({
               <Header />
             </ThemeProvider>
             {children}
+            <ToastContainer
+              hideProgressBar
+              position="top-center"
+              autoClose={2000}
+              closeOnClick
+              style={{ zIndex: 10 }}
+              theme="colored"
+            />
           </main>
         </body>
       </html>

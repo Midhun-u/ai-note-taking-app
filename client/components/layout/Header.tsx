@@ -76,13 +76,13 @@ const Header = () => {
                             ?
                             <CloseIcon
                                 size={21}
-                                className="sm:hidden stroke-foreground z-20"
+                                className="sm:hidden stroke-foreground z-30"
                                 onClick={() => setShowSidebar(false)}
                             />
                             :
                             <MenuIcon
                                 size={21}
-                                className="sm:hidden stroke-foreground z-20"
+                                className="sm:hidden stroke-foreground z-30"
                                 onClick={() => setShowSidebar(true)}
                             />
                     }
@@ -105,7 +105,7 @@ const Header = () => {
                             </SignInButton>
                         </SignedOut>
                     </div>
-                    <aside className={`text-primary flex ${showSidebar ? "right-0" : "-right-[100vw]"} gap-1 transition-all h-screen duration-300 flex-col w-screen absolute top-0 px-5 items-end py-15 z-10 bg-background`}>
+                    <aside className={`text-primary flex ${showSidebar ? "right-0" : "-right-[100vw]"} gap-1 transition-all h-screen duration-300 flex-col w-screen fixed top-0 px-5 items-end py-15 z-20 bg-background`}>
                         <Link
                             href={"/notes"}
                             className="border-b-2 w-full flex justify-end text-md p-2"
