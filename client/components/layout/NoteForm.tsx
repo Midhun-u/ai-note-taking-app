@@ -411,6 +411,7 @@ const NoteForm = ({ updateForm = false}: NoteFormType) => {
                                 className="bg-background text-foreground cursor-pointer border hover:bg-popover"
                                 onClick={() => router.push('/notes')}
                                 type="button"
+                                disabled={loading}
                             >
                                 Cancel
                             </Button>

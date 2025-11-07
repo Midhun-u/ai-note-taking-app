@@ -11,6 +11,7 @@ const noteSchema = new Schema({
         type : String,
         required : true,
         maxLength : 50,
+        index : true
     },
     content : {
         type : String,

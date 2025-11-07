@@ -22,6 +22,10 @@ The AI Note-Taking App is a full-stack application built to simplify digital not
 
 5. Users can switch between light and dark themes for a personalized interface experience.
 
+6. Users can search notes
+
+7. Implemented Pagination and Debouncing for improving performance
+
 ## Technologies
 
 - Frontend : Next js , Tailwind css , Shadcn , Zod(For validation) , Clerk (For authentication), Lucide React(For icons) , React toastify (For toast messages) , Axios (For API calls)

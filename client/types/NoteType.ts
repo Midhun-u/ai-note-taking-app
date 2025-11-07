@@ -1,4 +1,4 @@
-type NoteType = {
+export type NoteType = {
     _id : string,
     userId : string,
     title : string,

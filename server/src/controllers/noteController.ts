@@ -59,7 +59,7 @@ export const getNotesController = async (context: Context) => {
 
     try {
 
-        const { page = 1, limit = 50 } = await context.req.query()
+        const { page = 1, limit = 50} = await context.req.query()
         const pageNumber = convertNumber(page)
         const limitNumber = convertNumber(limit)
         const userId = await context.get("userId")
@@ -70,10 +70,12 @@ export const getNotesController = async (context: Context) => {
         }
 
         let totalCount: number | null = null
+
         if (pageNumber === 1) {
-            totalCount = await Note.countDocuments({ userId: userId })
+            totalCount = await Note.countDocuments({userId : userId})
         }
-        const notes = await Note.find({ userId: userId }, { updatedAt: 0 }).skip((pageNumber - 1) * limitNumber).limit(limitNumber)
+        const notes = await Note.find({ userId: userId}, { updatedAt: 0 }).skip((pageNumber - 1) * limitNumber).limit(limitNumber)
+       
         return context.json({ success: true, notes: notes, totalCount: totalCount })
 
     } catch (error) {
@@ -260,6 +262,37 @@ export const generateTagsController = async (context: Context) => {
 
     } catch (error) {
         throw new Error(`generateTagsController error : ${error}`)
+    }
+
+}
+
+//Controller for searching notes
+export const searchNotesController = async (context : Context) => {
+
+    try {
+        
+        const {page = 1, limit = 50} = await context.req.query()
+        const pageNumber = convertNumber(page)
+        const limitNumber = convertNumber(limit)
+        const {searchQuery} = context.req.param()
+        const userId = await context.get("userId")
+
+        if(!userId){
+            context.status(400)
+            return context.json({success : false , error : "User id is missing"})
+        }
+
+        let totalCount : number | null = null
+
+        if(pageNumber === 1){
+            totalCount = await Note.countDocuments({userId : userId , title : {$regex : searchQuery}})
+        }
+        const searchedNotes = await Note.find({userId : userId , title : {$regex : searchQuery}}).skip((pageNumber - 1) * limitNumber).limit(limitNumber)
+
+        return context.json({success : true , searchedNotes : searchedNotes , totalCount : totalCount})
+
+    } catch (error) {
+        throw new Error(`seachNotesController error : ${error}`)
     }
 
 }

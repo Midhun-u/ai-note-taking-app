@@ -67,3 +67,11 @@ export const generateTagsApi = async (content : string) => {
     return data
 
 }
+
+//Function for searching note
+export const searchNotesApi = async (searchQuery : string , page : number = 1 , limit : number = 50) => {
+
+    const {data} = await noteInstance.get(`/search-notes/${searchQuery.toString()}/?page=${page}&limit=${limit}`)
+    return data
+
+}

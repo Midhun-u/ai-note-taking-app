@@ -7,22 +7,58 @@ import {
     SearchIcon,
     PlusSquare as PluseIcon
 } from 'lucide-react'
+import React, { ChangeEvent } from "react"
 
-const SearchBar = () => {
+type SearchBarType = {
+    setSearchQuery : React.Dispatch<React.SetStateAction<string>>,
+    setPagination : React.Dispatch<React.SetStateAction<{page : number , limit : number , totalCount : number}>>
+}
+
+const SearchBar = ({setSearchQuery , setPagination} : SearchBarType) => {
 
     const router = useRouter()
 
+    //Function for storing value
+    const handleStoreValue = (event : ChangeEvent<HTMLInputElement>) => {
+
+        setPagination((pagination) => {
+            return {...pagination , page : 1}
+        })
+      
+        setSearchQuery(event.target.value)
+
+    }
+
+    //Debouncing
+    const debounce = (fn : Function , delay : number) => {
+
+        let timer : NodeJS.Timeout
+        return function (...arg : unknown[]) {
+
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+                fn(...arg)
+            } , delay)
+
+        }
+
+    }
+
+    //Function for handling event
+    const handleOnChangeEvent = debounce(handleStoreValue , 1000)
+
     return (
 
-        <div className="mt-5 w-full flex flex-col md:flex-row gap-3">
+        <div className="mt-5 w-full flex flex-col md:flex-row gap-3 z-50">
             <div className='w-full md:w-[70vw] flex items-center'>
                 <SearchIcon
                     className="absolute left-5 md:left-7 stroke-disable-color -z-1"
                     size={18}
                 />
                 <Input
-                    placeholder="Search notes"
-                    className="relative text-xs pl-10 focus-visible:ring-1 focus-visible:ring-primary rounded-xs -z-1"
+                    placeholder="Search notes by title"
+                    className="relative text-xs pl-10 focus-visible:ring-1 focus-visible:ring-primary rounded-xs"
+                    onChange={handleOnChangeEvent}
                 />
             </div>
             <Button

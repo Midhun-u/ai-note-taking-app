@@ -1,50 +1,24 @@
 'use client'
 
-import { getNotesApi, removeNoteApi } from '@/api/note'
-import { useCallback, useEffect, useState } from 'react'
+import { removeNoteApi } from '@/api/note'
+import React, { useCallback} from 'react'
 import Spinner from '../ui/Spinner'
 import NoteCard from './NoteCard'
 import { convertDate } from '@/utils/convertISODate'
 import { Button } from '../ui/button'
 import { toast } from 'react-toastify'
+import { NoteType } from '@/types/NoteType'
 
-const NoteList = () => {
+type NoteListType = {
+    notes : NoteType[],
+    pagination : {page : number , limit : number  , totalCount : number},
+    setPagination : React.Dispatch<React.SetStateAction<{page : number , limit : number , totalCount : number}>>,
+    setNotes : React.Dispatch<React.SetStateAction<NoteType[]>>,
+    loading : boolean
+}
 
-    const [notes, setNotes] = useState<NoteType[]>([])
-    const [loading, setLoading] = useState<boolean>(false)
-    const [pagination, setPagination] = useState<{ page: number, limit: number, totalCount: number }>({
-        page: 1,
-        limit: 50,
-        totalCount: 0
-    })
-
-    //Function for getting notes
-    const handleGetNotes = async () => {
-
-        try {
-
-            setLoading(true)
-            const result = await getNotesApi(pagination.page, pagination.limit)
-
-            if (result?.success) {
-
-                setNotes((preNotes) => {
-                    return preNotes.length && pagination.page !== 1 ? [...preNotes, ...result?.notes] : [...result?.notes]
-                })
-
-                if (result?.totalCount) {
-                    setPagination({ ...pagination, totalCount: result?.totalCount })
-                }
-            }
-
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-
-    }
-
+const NoteList = ({notes , setPagination , setNotes , pagination , loading} : NoteListType) => {
+    
     //function for removing note
     const handleRemoveNote = useCallback(async (noteId: string) => {
 
@@ -67,12 +41,6 @@ const NoteList = () => {
         }
 
     } , [])
-
-    useEffect(() => {
-
-        handleGetNotes()
-
-    }, [pagination.page])
 
     return (
 
@@ -97,14 +65,14 @@ const NoteList = () => {
                     (
                         !loading
                         ?
-                        <h1 className='text-lg md:text-xl mt-4'>No Notes Yet</h1>
+                        <h1 className='text-lg md:text-xl mt-4'>No Notes are found</h1>
                         :
                         <Spinner />
                     )
             }
             <div className='w-full flex justify-center'>
                 {
-                    notes.length < pagination.totalCount
+                    notes.length < pagination.totalCount && notes.length
                         ?
                         <Button
                             disabled={loading}
