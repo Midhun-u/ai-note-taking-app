@@ -11,10 +11,10 @@ import {
     TagIcon,
     X as CloseIcon
 } from 'lucide-react'
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useFormStatus } from "react-dom"
 import { z } from 'zod'
-import { createNoteApi, getNoteApi, takeSummaryApi, updateNoteApi } from "@/api/note"
+import { createNoteApi, generateTagsApi, getNoteApi, improveTextApi, takeSummaryApi, updateNoteApi } from "@/api/note"
 import { toast } from "react-toastify"
 import Spinner from "../ui/Spinner"
 
@@ -28,7 +28,7 @@ type NoteFormType = {
     updateForm?: boolean,
 }
 
-const NoteForm = ({ updateForm }: NoteFormType) => {
+const NoteForm = ({ updateForm = false}: NoteFormType) => {
 
     const router = useRouter()
     const [noteFormData, setNoteFormData] = useState<NoteFormDataType>({
@@ -39,9 +39,10 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
     const [tag, setTag] = useState<string>('')
     const [loading, setLoading] = useState(false)
     const [summary, setSummary] = useState<string>('')
+    const [improvedText, setImprovedText] = useState<string>('')
     const { id: noteId } = useParams()
 
-    //function for submitting form
+    //Function for submitting form
     const handleSubmitForm = async () => {
 
         try {
@@ -59,19 +60,19 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
                 return
             }
 
-            if(updateForm){
+            if (updateForm) {
 
-              const result = await updateNoteApi(noteId as string , noteFormData.title , noteFormData.content , noteFormData.tags)
-              
-              if(result?.success){
+                const result = await updateNoteApi(noteId as string, noteFormData.title, noteFormData.content, noteFormData.tags)
 
-                router.push("/notes")
-                setNoteFormData({ ...noteFormData, title: '', content: '', tags: [] })
-                toast.success("Updated")
+                if (result?.success) {
 
-              }
+                    router.push("/notes")
+                    setNoteFormData({ ...noteFormData, title: '', content: '', tags: [] })
+                    toast.success("Updated")
 
-            }else{
+                }
+
+            } else {
 
                 const result = await createNoteApi(noteFormData.title, noteFormData.content, noteFormData.tags)
 
@@ -90,7 +91,7 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
 
     }
 
-    //function for removing tag
+    //Function for removing tag
     const handleRemoveTag = (tagIndex: number) => {
 
         const filteredTag = noteFormData.tags.filter((_, index) => index !== tagIndex)
@@ -98,7 +99,7 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
 
     }
 
-    //function for adding tag
+    //Function for adding tag
     const handleAddTag = () => {
 
         if (!tag) return
@@ -108,7 +109,7 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
 
     }
 
-    //function for taking summary
+    //Function for taking summary
     const handleGetSummary = async () => {
 
         try {
@@ -117,8 +118,8 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
 
             setLoading(true)
             const result = await takeSummaryApi(noteFormData.content)
-            if (result?.data?.summary_text) {
-                setSummary(result.data.summary_text)
+            if (result?.success) {
+                setSummary(result?.summary)
             }
 
         } catch (error) {
@@ -130,7 +131,7 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
 
     }
 
-    //function for getting note
+    //Function for getting note
     const handleGetNote = async () => {
 
         try {
@@ -151,6 +152,52 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
         }
 
     }
+
+    //Function for improving text
+    const handleGetImprovedText = async () => {
+
+        try {
+
+            if (!noteFormData.content) return
+
+            setLoading(true)
+            const result = await improveTextApi(noteFormData.content)
+            if (result?.success) {
+                setImprovedText(result?.improvedText)
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Something went wrong")
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
+    //Function for generating tags
+    const handleGenerateTags = async () => {
+
+        try {
+
+            if (!noteFormData.content) return
+
+            setLoading(true)
+
+            const result = await generateTagsApi(noteFormData.content)
+            if (result?.success) {
+                setNoteFormData({ ...noteFormData, tags: [...result?.tags] })
+            }
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Something went wrong")
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
 
     useEffect(() => {
 
@@ -231,6 +278,20 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
                             :
                             null
                     }
+                    {
+                        improvedText
+                            ?
+                            <Field>
+                                <FieldLabel>
+                                    Improved Text
+                                </FieldLabel>
+                                <p className="text-xs text-disable-color">
+                                    {improvedText}
+                                </p>
+                            </Field>
+                            :
+                            null
+                    }
                     <Field>
                         <FieldLabel>
                             AI Actions
@@ -242,34 +303,61 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
                                 type="button"
                                 disabled={loading}
                             >
-                                <SummarizeIcon
-                                    size={18}
-                                    strokeWidth={1.5}
-                                />
-                                <span className="text-xs font-normal">AI Summary</span>
+                                {
+                                    loading
+                                        ?
+                                        <Spinner />
+                                        :
+                                        <>
+                                            <SummarizeIcon
+                                                size={18}
+                                                strokeWidth={1.5}
+                                            />
+                                            <span className="text-xs font-normal">AI Summary</span>
+                                        </>
+                                }
                             </Button>
                             <Button
                                 className="bg-background text-foreground cursor-pointer border hover:bg-popover"
                                 type="button"
                                 disabled={loading}
+                                onClick={handleGetImprovedText}
                             >
-                                <ImproveIcon
-                                    size={18}
-                                    strokeWidth={1.5}
+                                {
+                                    loading
+                                        ?
+                                        <Spinner />
+                                        :
+                                        <>
+                                            <ImproveIcon
+                                                size={18}
+                                                strokeWidth={1.5}
 
-                                />
-                                <span className="text-xs font-normal">AI Improve</span>
+                                            />
+                                            <span className="text-xs font-normal">AI Improve</span>
+                                        </>
+                                }
                             </Button>
                             <Button
                                 className="bg-background text-foreground cursor-pointer border hover:bg-popover"
                                 type="button"
                                 disabled={loading}
+                                onClick={handleGenerateTags}
                             >
-                                <TagIcon
-                                    size={18}
-                                    strokeWidth={1.5}
-                                />
-                                <span className="text-xs font-normal">Generate Tags</span>
+                                {
+                                    loading
+                                        ?
+                                        <Spinner />
+                                        :
+                                        <>
+                                            <TagIcon
+                                                size={18}
+                                                strokeWidth={1.5}
+                                            />
+                                            <span className="text-xs font-normal">Generate Tags</span>
+                                        </>
+
+                                }
                             </Button>
                         </div>
                     </Field>
@@ -294,17 +382,22 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
                         <div className="flex gap-2 flex-wrap">
                             {
                                 noteFormData.tags.map((tag, index) => (
-                                    <div
-                                        className="border p-2 text-xs pr-10 flex items-center relative cursor-pointer"
-                                        onClick={() => handleRemoveTag(index)}
-                                        key={index}
-                                    >
-                                        <p>{tag}</p>
-                                        <CloseIcon
-                                            size={15}
-                                            className="absolute right-2"
-                                        />
-                                    </div>
+                                    tag
+                                        ?
+                                        <React.Fragment key={index}>
+                                            <div
+                                                className="border p-2 text-xs pr-10 flex items-center relative cursor-pointer"
+                                                onClick={() => handleRemoveTag(index)}
+                                            >
+                                                <p>{tag}</p>
+                                                <CloseIcon
+                                                    size={15}
+                                                    className="absolute right-2"
+                                                />
+                                            </div>
+                                        </React.Fragment>
+                                        :
+                                        null
                                 ))
                             }
                         </div>
@@ -312,7 +405,7 @@ const NoteForm = ({ updateForm }: NoteFormType) => {
                     <Field>
                         <div className="flex gap-3 flex-wrap">
                             <SubmitForm
-                                updateForm
+                                updateForm={updateForm}
                             />
                             <Button
                                 className="bg-background text-foreground cursor-pointer border hover:bg-popover"

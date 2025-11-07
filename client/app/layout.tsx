@@ -41,7 +41,7 @@ export default function RootLayout({
               position="top-center"
               autoClose={2000}
               closeOnClick
-              style={{ zIndex: 10 }}
+              style={{ zIndex: 9999 }}
               theme="colored"
             />
           </main>

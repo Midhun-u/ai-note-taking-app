@@ -8,7 +8,7 @@ export const authMiddleware = async (context : Context , next : Next) => {
     try{
 
         const auth = getAuth(context)
-        console.log(auth)
+        
         if(!auth?.isAuthenticated){
             context.status(400)
             return context.json({success : false , error : "Unauthorized user"})

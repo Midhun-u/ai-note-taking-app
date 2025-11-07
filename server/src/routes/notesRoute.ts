@@ -1,6 +1,6 @@
 import { Hono } from "hono"
 import { authMiddleware } from "../middlewares/auth.js"
-import { createNoteController, createSummaryController, getNoteController, getNotesController, removeNoteController, updateNoteController } from "../controllers/noteController.js"
+import { createNoteController, createSummaryController, generateTagsController, getNoteController, getNotesController, improveTextController, removeNoteController, updateNoteController } from "../controllers/noteController.js"
 import { clerkMiddleware } from "@hono/clerk-auth"
 
 //Note router
@@ -31,3 +31,9 @@ noteRouter.put("/update-note/:noteId" , updateNoteController)
 
 //Route for taking summary of content
 noteRouter.post("/summary" , createSummaryController)
+
+//Route for improving text
+noteRouter.post("/improve-text" , improveTextController)
+
+//Route for generating tags
+noteRouter.post('/generate-tags' , generateTagsController)

@@ -5,7 +5,7 @@ const page = () => {
     return (
 
         <section className="pt-15 px-2 md:px-4 w-full h-full flex justify-center">
-            <NoteForm 
+            <NoteForm
             />
         </section>
 

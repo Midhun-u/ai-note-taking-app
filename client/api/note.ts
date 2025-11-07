@@ -51,3 +51,19 @@ export const takeSummaryApi = async (content : string) => {
     return data
 
 }
+
+//Function for improving text
+export const improveTextApi = async (content : string) => {
+
+    const {data} = await noteInstance.post("/improve-text" , {content : content})
+    return data
+
+}
+
+//Function for generating tags
+export const generateTagsApi = async (content : string) => {
+
+    const {data} = await noteInstance.post('/generate-tags' , {content : content})
+    return data
+
+}

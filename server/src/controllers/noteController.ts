@@ -1,9 +1,10 @@
 import type { Context } from "hono";
 import { z } from 'zod'
 import { Note } from "../models/Note.js";
-import { pipeline } from '@xenova/transformers'
 import { convertNumber } from "../utils/convertNumber.js";
 import type { Body } from "../types/body.js";
+import { validateBody } from "../utils/validateBody.js";
+import { generateContent } from "../utils/contentGeneration.js";
 
 //Controller for creating note
 export const createNoteController = async (context: Context) => {
@@ -99,8 +100,8 @@ export const removeNoteController = async (context: Context) => {
             return context.json({ success: false, error: "User id is missing" })
         }
 
-        await Note.deleteOne({userId : userId , _id : noteId})
-        return context.json({success : true , message : "Note is deleted"})
+        await Note.deleteOne({ userId: userId, _id: noteId })
+        return context.json({ success: true, message: "Note is deleted" })
 
     } catch (error) {
         throw new Error(`removeNoteController error : ${error}`)
@@ -109,26 +110,26 @@ export const removeNoteController = async (context: Context) => {
 }
 
 //Controller for getting a note
-export const getNoteController = async (context : Context) => {
+export const getNoteController = async (context: Context) => {
 
     try {
-       
+
         const userId = await context.get("userId")
-        const {noteId} = await context.req.param()
-        
-        if(!userId){
+        const { noteId } = await context.req.param()
+
+        if (!userId) {
             context.status(400)
-            return context.json({success : false , error : "User id is missing"})
+            return context.json({ success: false, error: "User id is missing" })
         }
 
-        if(!noteId){
+        if (!noteId) {
             context.status(400)
-            return context.json({success : false , error : "Note id is missing"})
+            return context.json({ success: false, error: "Note id is missing" })
         }
 
-        const note = await Note.findOne({_id : noteId , userId : userId})
-        return context.json({success : true , note : note})
-        
+        const note = await Note.findOne({ _id: noteId, userId: userId })
+        return context.json({ success: true, note: note })
+
     } catch (error) {
         throw new Error(`getNoteController error : ${error}`)
     }
@@ -136,22 +137,22 @@ export const getNoteController = async (context : Context) => {
 }
 
 //Controller for updating note
-export const updateNoteController = async (context : Context)  => {
+export const updateNoteController = async (context: Context) => {
 
     try {
-        
-        const {noteId} = await context.req.param()
-        const userId = await context.get("userId")
-        const {title , content , tags} = await context.req.json() as Body || {}
 
-        if(!userId){
+        const { noteId } = await context.req.param()
+        const userId = await context.get("userId")
+        const { title, content, tags } = await context.req.json() as Body || {}
+
+        if (!userId) {
             context.status(400)
-            return context.json({success : false , error : "User id is missing"})
+            return context.json({ success: false, error: "User id is missing" })
         }
 
-        if(!noteId){
+        if (!noteId) {
             context.status(400)
-            return context.json({success : false , error : "Note id is missing"})
+            return context.json({ success: false, error: "Note id is missing" })
         }
 
         const noteSchema = z.object({
@@ -160,26 +161,26 @@ export const updateNoteController = async (context : Context)  => {
             tags: z.string().optional().array().max(10)
         })
 
-        const {success , error} = noteSchema.safeParse(await context.req.json())
+        const { success, error } = noteSchema.safeParse(await context.req.json())
 
-        if(!success && error){
+        if (!success && error) {
             console.log(error)
             context.status(400)
-            return context.json({success : false , error : "Invalid fields"})
+            return context.json({ success: false, error: "Invalid fields" })
         }
 
-        const updateNote = await Note.findByIdAndUpdate(noteId , {
-            title : title,
-            content : content,
-            tags : tags
-        } , {new : true})
+        const updateNote = await Note.findByIdAndUpdate(noteId, {
+            title: title,
+            content: content,
+            tags: tags
+        }, { new: true })
 
-        if(updateNote){
-            return context.json({success : true , message : "Updated"})
+        if (updateNote) {
+            return context.json({ success: true, message: "Updated" })
         }
-        
+
         context.status(400)
-        return context.json({success : false , error : "Note is note updated"})
+        return context.json({ success: false, error: "Note is note updated" })
 
     } catch (error) {
         throw new Error(`updateNoteController error : ${error}`)
@@ -197,24 +198,68 @@ export const createSummaryController = async (context: Context) => {
         }
         const { content } = await context.req.json() as Body || {}
 
-        const bodySchema = z.object({
-            content: z.string().min(1)
-        })
+        //Validating body
+        validateBody(context)
 
-        const { success, error } = bodySchema.safeParse(await context.req.json())
+        //Generating body
+        const data = await generateContent(`Summarize this text "${content}"`)
 
-        if (!success && error) {
-            context.status(400)
-            return context.json({ success: false, error: "Invalid fields" })
-        }
-
-        const pipe = await pipeline("summarization")
-        const result = await pipe(content, { max_length: 50 })
-
-        return context.json({ success: true, data: result[0] })
+        return context.json({ success: true, summary: data })
 
     } catch (error) {
         throw new Error(`createSummaryController error : ${error}`)
+    }
+
+}
+
+//Controller for improving text
+export const improveTextController = async (context: Context) => {
+
+    try {
+
+        type Body = {
+            content: string
+        }
+        const { content } = await context.req.json() as Body || {}
+
+        //Validating body
+        validateBody(context)
+
+        //Generating content
+        const data = await generateContent(`Improve this text "${content} by grammer"`)
+
+        return context.json({ success: true, improvedText: data })
+
+    } catch (error) {
+        throw new Error(`improveContentController error : ${error}`)
+    }
+
+}
+
+//Controller for generating tags
+export const generateTagsController = async (context: Context) => {
+
+    try {
+
+        type Body = {
+            content: string
+        }
+        const { content } = await context.req.json() as Body || {}
+
+        //Validating body
+        validateBody(context)
+
+        //Generating content
+        const data = await generateContent(`Generate 1 to 10 tags from this text "${content}"`)
+        const tags = data?.split("-").join(",").split(",").map((tag , index) => {
+            if(tag.trim()){
+                return tag.replace("\n" , '').trim()
+            }
+        })
+        return context.json({success : true , tags : tags?.splice(10)})
+
+    } catch (error) {
+        throw new Error(`generateTagsController error : ${error}`)
     }
 
 }
