@@ -10,11 +10,11 @@ The AI Note-Taking App is a full-stack application built to simplify digital not
 
 2. Users can create intelligent notes enhanced by AI features such as:
 
- .Automatic summary generation
+ - Automatic summary generation
 
- .Grammar and text improvement
+ - Grammar and text improvement
 
- .Smart tag generation for better organization
+ - Smart tag generation for better organization
 
 3. Users can update existing notes easily.
 
