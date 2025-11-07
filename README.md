@@ -16,7 +16,7 @@ The AI Note-Taking App is a full-stack application built to simplify digital not
 
  - Smart tag generation for better organization
 
-3. Users can update existing notes easily.
+3. Users can update existing and remove notes easily.
 
 4. Users can view and manage all saved notes in one place.
 
@@ -31,3 +31,12 @@ The AI Note-Taking App is a full-stack application built to simplify digital not
 - Languages : Typescript
 
 - Vision Control : Git 
+
+
+## Project View
+
+![Landing Page](./Landing_page.png)
+![Authentication Page](./Authentication_page.png)
+![Creating Note Page](./Creating_Note_page.png)
+![Updating Note Page](./Updating_note_page.png)
+![Notes List Page](./Note_list_page.png)
