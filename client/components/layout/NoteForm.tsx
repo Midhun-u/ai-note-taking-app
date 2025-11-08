@@ -48,7 +48,7 @@ const NoteForm = ({ updateForm = false}: NoteFormType) => {
         try {
 
             const formSchema = z.object({
-                title: z.string().min(1).max(20),
+                title: z.string().min(1).max(50),
                 content: z.string().min(1),
                 tags: z.string().optional().array().max(10)
             })

@@ -253,7 +253,7 @@ export const generateTagsController = async (context: Context) => {
 
         //Generating content
         const data = await generateContent(`Generate 1 to 10 tags from this text "${content}"`)
-        const tags = data?.split("-").join(",").split(",").map((tag , index) => {
+        const tags = data?.split(".").join(",").split(",").map((tag) => {
             if(tag.trim()){
                 return tag.replace("\n" , '').trim()
             }
