@@ -186,7 +186,12 @@ const NoteForm = ({ updateForm = false}: NoteFormType) => {
 
             const result = await generateTagsApi(noteFormData.content)
             if (result?.success) {
-                setNoteFormData({ ...noteFormData, tags: [...result?.tags] })
+                const filteredTags = result?.tags.map((tag : string) => {
+
+                    if(tag.trim()) return
+
+                })
+                setNoteFormData({ ...noteFormData, tags: [...filteredTags] })
             }
 
         } catch (error) {
