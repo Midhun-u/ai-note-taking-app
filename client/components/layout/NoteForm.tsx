@@ -188,7 +188,7 @@ const NoteForm = ({ updateForm = false}: NoteFormType) => {
             if (result?.success) {
                 const filteredTags = result?.tags.map((tag : string) => {
 
-                    if(tag.trim()) return
+                    if(typeof tag === "string" && tag.trim().length <= 10) return tag
 
                 })
                 setNoteFormData({ ...noteFormData, tags: [...filteredTags] })

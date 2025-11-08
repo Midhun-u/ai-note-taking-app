@@ -253,12 +253,13 @@ export const generateTagsController = async (context: Context) => {
 
         //Generating content
         const data = await generateContent(`Generate 1 to 10 tags from this text "${content}"`)
-        const tags = data?.split(".").join(",").split(",").map((tag) => {
-            if(tag.trim()){
-                return tag.replace("\n" , '').trim()
+        const tags = data?.split(".").join(",").split(",").map((tag , index) => {
+            if(tag.trim() && index < 10){
+                return tag
             }
-        })
-        return context.json({success : true , tags : tags?.splice(10)})
+        })[0]?.split("\n")
+        console.log(tags)
+        return context.json({success : true , tags : tags})
 
     } catch (error) {
         throw new Error(`generateTagsController error : ${error}`)
